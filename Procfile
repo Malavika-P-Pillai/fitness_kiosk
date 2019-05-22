@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: gunicorn create_fitnessapi:fitness-kiosk
