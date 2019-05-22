@@ -1,1 +1,1 @@
-web: gunicorn app:fitness_kiosk
+web: gunicorn app:app
