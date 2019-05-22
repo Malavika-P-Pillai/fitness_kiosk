@@ -1,1 +1,1 @@
-web: uwsgi uwsgi.ini
+web: gunicorn create_fitnessapi:fitness_kiosk
