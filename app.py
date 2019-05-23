@@ -123,7 +123,7 @@ def filterd_data_exercise():
     conn.row_factory = dict_factory
     cursor = conn.cursor()
 
-     data = cursor.execute(query, filters).fetchall()
+    data = cursor.execute(query, filters).fetchall()
     return jsonify(data)
     """#items = ItemModel.query.all()
        
