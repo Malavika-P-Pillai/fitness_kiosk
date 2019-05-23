@@ -3,7 +3,6 @@
 
 import flask
 from flask import request, jsonify
-from flask_table import Table, Col
 
 import sqlite3
 from sqlite3 import Error
@@ -43,60 +42,9 @@ def all_data():
 
     return jsonify(data)
 
-class ItemTable(Table):
-    fooditem = Col('Food Item')
-   
-    additionalinfo = Col('Additional Info')
-
-class Item(object):
-    def __init__(self, fooditem, additionalinfo):
-        self.fooditem = fooditem
-        self.additionalinfo = additionalinfo
-
-class ItemTable_ex(Table):
-    
-    ex_name = Col('Exercise Name')
-    
-
-class Item_ex(object):
-    def __init__(self, ex_name):
-        self.ex_name = name
-                
-
 # This function fetches data based on the filter provided by the user
-@app.route('/v1/resources/nutrition/bmi', methods=['GET'])
-def filterd_data_nutrition():
-    query_parameters = request.args
-
-    id = query_parameters.get('id')
-    name = query_parameters.get('name')
-    #lower = query_parameters.get('lower')
-    #upper = query_parameters.get('upper')
-
-    query = 'SELECT fooditem,additionalinfo FROM BMI, nutriplan , fooditem WHERE BMI.id=nutriplan.b_id AND nutri_id=fooditem.n_id AND'
-    filters = []
-
-    if name:
-        query = query + ' name=? AND'
-        filters.append(name)
-    if not (name):
-        page_not_found()
-    
-    # This removes everything till the fourth last character in the 
-    # final query
-    query = query[:-4] + ';'
-
-    conn = initialize_db()
-    conn.row_factory = dict_factory
-    cursor = conn.cursor()
-
-    #items = ItemModel.query.all()
-    data = cursor.execute(query, filters).fetchall()
-    table = ItemTable(data)
-    return table.__html__()
-
-@app.route('/v1/resources/workout/bmi', methods=['GET'])
-def filterd_data_exercise():
+@app.route('/v1/resources/fruits/bmi', methods=['GET'])
+def filterd_data():
     query_parameters = request.args
 
     id = query_parameters.get('id')
@@ -104,7 +52,7 @@ def filterd_data_exercise():
     lower = query_parameters.get('lower')
     upper = query_parameters.get('upper')
 
-    query = 'SELECT DISTINCT ex_name FROM BMI,exercise, fooditem WHERE BMI.id=exercise.bmi_id AND'
+    query = 'SELECT * FROM BMI,exercise, nutriplan , fooditem WHERE BMI.id=exercise.bmi_id AND BMI.id=nutriplan.b_id AND nutri_id=fooditem.n_id AND'
     filters = []
 
     if name:
@@ -121,10 +69,8 @@ def filterd_data_exercise():
     conn.row_factory = dict_factory
     cursor = conn.cursor()
 
-    #items = ItemModel.query.all()
     data = cursor.execute(query, filters).fetchall()
-    table = ItemTable_ex(data)
-    return table.__html__()
+    return jsonify(data)
 
 # This function shows a error page if the API is not called correctly
 @app.errorhandler(404)
